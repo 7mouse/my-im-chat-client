@@ -1,46 +1,25 @@
-import { useEffect, useState } from "react"
-import { BrowserRouter } from "react-router-dom"
+import { useState } from "react"
 import SearchBar from "../../components/common/SearchBar"
-import UserinfoModel from "../../components/UserInfoModel"
 import UserList from "../../components/UserList"
-import UserWindow from "../../components/UserWindow"
-import { useError } from "../../hooks/useError"
+import UserRoom from "../../components/UserRoom"
+import { useAuth } from "../../hooks/useAuth"
 
 const Rooms = () => {
-  // const {setError} = useError();
-  // useEffect(()=>{
-  //   setError("123")
-  // }, []);
   const [search, setSearch] = useState("");
-  const arr:Array<{userName:string, userInfo?: string}> = [
-    {
-      userName: "Li",
-      userInfo: "Hello !!!"
-    },
-    {
-      userName: "Ken",
-      userInfo: ""
-    },
-    {
-      userName: "Qing",
-    }
-  ]
+  const {user} = useAuth();
   return (
-    <BrowserRouter>
-      {/* <UserinfoModel /> */}
       <div className="flex flex-row w-full">
         <div className="w-64 bg-gray-100 flex flex-col">
-          <SearchBar setSearch={(str)=>setSearch(str)}/>
-          <UserList users={arr.filter(item=>{
+          <SearchBar setSearch={(str)=>setSearch(str)} plusAdd={true}/>
+          <UserList users={user?.rooms?.filter(item=>{
             if (search.length > 0) {
-              return item.userName.includes(search);
+              return item.username.includes(search);
             }
             return true;
           })}/>
         </div>
-        <UserWindow />
+        <UserRoom />
       </div>
-    </BrowserRouter>
   )
 }
 export default Rooms;

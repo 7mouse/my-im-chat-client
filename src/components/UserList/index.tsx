@@ -3,23 +3,25 @@ import React from 'react';
 import UserCard from '../UserCard';
 
 type userinfo = {
-  userName: string,
-  userInfo?: string
+  username: string,
+  userinfo?: string,
+  avatarUrl?: string
 }
 
 type props = {
-  users: Array<userinfo>
+  users: Array<userinfo> | undefined | null
 };
 
 const UserList = ({users}:props) => {
-  let arr = users
   return (
     <div className="flex flex-1 flex-col items-center">
       {
-        arr.map(item=> (
-          <UserCard key={item.userName}
-            userName={item.userName}
-            userInfo={item.userInfo ? item.userInfo : "这个用户什么都没有留下..."}
+        users?.map(item=> (
+          <UserCard 
+            key={item.username}
+            userName={item.username}
+            userInfo={item.userinfo}
+            imgSrc={item.avatarUrl}
           />
         ))
       }

@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
-import { Route, Router } from 'react-router';
+import { Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
-import ChatList from '../../components/ChatList';
 import Avatar from '../../components/common/Avatar';
 import NavBar from '../../components/common/NavBar';
-import SearchBar from '../../components/common/SearchBar';
 import UserinfoModel from '../../components/UserInfoModel';
-import UserList from '../../components/UserList';
 import { useAuth } from '../../hooks/useAuth';
 import Rooms from '../Rooms';
 import Windows from '../windows';
@@ -14,17 +11,20 @@ import Windows from '../windows';
 let Home:React.FC = ()=> {
   let { signout, user } = useAuth();
   const [showModel, setShowModel] = useState<boolean>(false);
+  // console.log(user)
+  // if (user === undefined) return <div>loading...</div>
+  // console.log(1)
   return (
     <BrowserRouter>
       <div className="w-216 h-160 rounded-md flex bg-gray-800 flex-row">
         {
           showModel ?
-          <UserinfoModel imgSrc={user?.imgSrc} close={()=>setShowModel(false)}/>
+          <UserinfoModel close={()=>setShowModel(false)}/>
           : null
         }
         <div className="w-16 bg-gray-900 flex flex-col justify-between">
-          <div className="my-5 flex justify-center items-center" onClick={()=>setShowModel(true)}>
-            <Avatar />
+          <div className="my-5 flex justify-center items-center overflow-hidden" onClick={()=>setShowModel(true)}>
+            <Avatar imgSrc={user?.avatarUrl}/>
           </div>
           <div className="flex items-center flex-col justify-between flex-1">
             <NavBar />

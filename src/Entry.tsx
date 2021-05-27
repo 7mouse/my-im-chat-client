@@ -14,12 +14,12 @@ import { useError } from "./hooks/useError";
 
 let App: React.FC = () => {
   const { user } = useAuth();
-  const {error, setError} = useError();
+  const {error } = useError();
   return (
     <div className="App w-screen h-screen flex justify-center items-center">
       <Router>
         <Switch>
-            <Route exact path="/">
+            <Route path="/">
               <HomePage />
             </Route>
             <Route path="/login">

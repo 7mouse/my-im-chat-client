@@ -2,15 +2,21 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 
 export type User = {
   username: string,
-  imgSrc?: string,
-  userinfo?: string
+  avatarUrl?: string,
+  userinfo?: string,
+  rooms?: Array<{  
+    username: string,
+    avatarUrl?: string,
+    userinfo?: string,
+  }>
 }
 
 export type authContent = {
   user: User | undefined | null,
   signin: Function,
   signout: Function,
-  signup: Function
+  signup: Function,
+  updateUserinfo: Function
 }
 
 let authContext = createContext<authContent>({
@@ -18,6 +24,7 @@ let authContext = createContext<authContent>({
   signin: ()=>{},
   signup: ()=>{},
   signout: ()=>{},
+  updateUserinfo: ()=>{}
 });
 
 export function useAuth() {
@@ -38,19 +45,19 @@ function useProvideAuth() {
       mode: "cors",
       credentials: "include",
       body: JSON.stringify({
-        username,
-        password
+        username: username,
+        password: password
       }),
       referrer: "no-referrer"
     }).then(response=>response.json()).then((data)=>{
       if (data.message && data.message === "登录成功") {
-        setUser({username});
+        setUser(data.data);
       } else {
         onError(data.message)
       }
     });
   }
-  const signup = async (username:string, password:string, email:string, onError:(str:string)=>void) => {
+  const signup = async (username:string, password:string, email:string, onError:(str:string)=>boolean) => {
     return await fetch('http://localhost:8888/user/register', {
       method: "POST",
       mode: "cors",
@@ -63,9 +70,9 @@ function useProvideAuth() {
       referrer: "no-referrer"
     }).then(response=>response.json()).then((data)=>{
       if (data.message && data.message === "注册成功") {
-        setUser({username});
+        return true;
       } else {
-        onError(data.data.message)
+        onError(data.message);
       }
     });
   }
@@ -83,21 +90,24 @@ function useProvideAuth() {
     });
   }
 
-  useEffect(() => {
-    (async ()=> {
-      fetch("http://localhost:8888/user/islogged", {
+  const updateUserinfo = async () => {
+    await fetch("http://localhost:8888/user/islogged", {
         method: "POST",
         credentials: "include",
         mode: "cors"
       }).then(response=>response.json()).then(chunk=>{
-        console.log(chunk.message)
         if (chunk.message === "未登陆") {
           setUser(undefined);
         }
         else {
-          setUser(chunk.data.username);
+          setUser(chunk.data);
         }
       })
+  }
+
+  useEffect(() => {
+    (async ()=> {
+      await updateUserinfo();
       // return (
       //   async ()=> {
       //     await signout();
@@ -107,8 +117,9 @@ function useProvideAuth() {
   }, []);
   return {
     user,
-    signin,
+    signin,   
     signup,
-    signout
+    signout,
+    updateUserinfo
   }
 }

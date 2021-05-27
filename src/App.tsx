@@ -3,12 +3,15 @@ import './App.css';
 import { ProvideAuth } from './hooks/useAuth';
 import Entry from "./Entry"
 import { ErrorProvider } from './hooks/useError';
+import { WindowsProvider } from './hooks/useWindows';
 
 let App:React.FC = ()=> {
   return (
     <ProvideAuth>
       <ErrorProvider>
-        <Entry />
+        <WindowsProvider>
+          <Entry />
+        </WindowsProvider>
       </ErrorProvider>
     </ProvideAuth>
   );

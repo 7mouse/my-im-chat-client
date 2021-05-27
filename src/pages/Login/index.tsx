@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import './login.css';
+import {getKeyCode} from '../../utils/tools'
 
 let Login:React.FC = ()=> {
   let {signin, signup} = useAuth();
@@ -24,11 +25,21 @@ let Login:React.FC = ()=> {
 
   async function handleSignin() {
     if (ValidCheck())
-    await signin(username, password, (str:string)=>setError([str]));
+      await signin(username, password, (str:string)=>setError([str]));
+    
   }
   async function handleSignUp() {
-    if (ValidCheck())
-    await signup(username, password, email, (str:string)=>setError([str]));
+    if (ValidCheck()) {
+      const res = await signup(username, password, email, (str:string)=>setError([str]));
+      if (res) {
+        setUserName("");
+        setPassWord("");
+        setEmail("");
+        setError([]);
+        setLoginState(!loginState);
+      }
+    }
+
   }
   function ValidCheck() {
     let arr = [];
@@ -39,7 +50,16 @@ let Login:React.FC = ()=> {
     else return false;
   }
   return (
-    <div className="w-70 h-100 rounded-md flex bg-gray-100 flex-col justify-between items-center">
+    <div className="w-70 h-100 rounded-md flex bg-gray-100 flex-col justify-between items-center"        
+      onKeyDown={(event)=>{
+        let code  = getKeyCode(event);
+        // console.log(code)
+        if (code === "Enter" || code === 13) {
+          if (loginState === true) handleSignUp();
+          else handleSignin();
+        }
+      }}
+    >
       <div className="self-start ml-2 mt-2 text-gray-400">VChat Room</div>
       {/* <div className="flex justify-center items-center rounded-lg w-24 h-24 bg-gray-400">
         头像
@@ -72,7 +92,7 @@ let Login:React.FC = ()=> {
             {
               <div className="mt-2 bg-red-700 w-full text-white flex flex-col justify-center items-center">
                 {
-                  error && error.map(item=>(<div>{item}</div>))
+                  error && error.map((item, index)=>(<div key={index}>{item}</div>))
                 }
               </div>
             }
@@ -106,7 +126,7 @@ let Login:React.FC = ()=> {
             {
               <div className="mt-2 bg-red-700 w-full text-white flex flex-col justify-center items-center">
                 {
-                  error && error.map(item=>(<div>{item}</div>))
+                  error && error.map((item, index)=>(<div key={index}>{item}</div>))
                 }
               </div>
             }
@@ -126,13 +146,16 @@ let Login:React.FC = ()=> {
         className="mb-10 flex"
       >
         <div className="text-blue-700 cursor-pointer select-none"        
-          onClick={()=>setLoginState(!loginState)}
+          onClick={()=>{
+            setLoginState(!loginState);
+            setError([]);
+          }}
         >
         {
           loginState ? "切换到登陆" : "切换到注册"
         }
         </div>
-        <div className="ml-2 text-blue-700 cursor-pointer select-none ">找回密码</div>
+        {/* <div className="ml-2 text-blue-700 cursor-pointer select-none ">找回密码</div> */}
       </div>
     </div>
   );

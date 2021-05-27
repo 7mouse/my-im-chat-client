@@ -20,7 +20,6 @@ export function ErrorProvider({children}:{children:ReactNode}) {
     setErr(str);
     setTimeout(()=>{
       setErr("");
-      console.log('1')
     }, (delay || 1000));
   }
   return (

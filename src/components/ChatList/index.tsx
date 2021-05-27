@@ -30,12 +30,13 @@ let ChatList = ({users}:props) => {
   return (
     <div className="flex flex-1 flex-col items-center">
       {
-        arr.map(item=> (
+        arr.map((item)=> (
           <ChatCard 
             key={item.userName}
             userName={item.userName}
             newMessage={item.newMessage}
             newMessageTime={item.newMessageTime}
+            imgSrc={item.imgSrc}
           />
         ))
       }
