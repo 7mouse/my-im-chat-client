@@ -1,5 +1,6 @@
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import { useWindows } from "../../hooks/useWindows";
 import Avatar from "../common/Avatar";
 
@@ -10,11 +11,11 @@ import Avatar from "../common/Avatar";
 // }
 // {username, userinfo="", imgSrc=""}:props
 const UserInfo = () => {
-  const {username, userinfo, imgSrc} = useLocation<{
-    username: string,
-    userinfo: string,
-    imgSrc: string
-  }>().state;
+  const {username} = useParams<{username: string}>();
+  const {user} = useAuth();
+  const u = user?.rooms?.filter(item=>item.username === username)[0];
+  const imgSrc = u?.avatarUrl;
+  const userinfo = u?.userinfo;
   const {addWindow} = useWindows();
   return (  
     <div className="bg-gray-50 flex flex-col flex-1 justify-center items-center">

@@ -1,16 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import Avatar from '../../components/common/Avatar';
 import NavBar from '../../components/common/NavBar';
 import UserinfoModel from '../../components/UserInfoModel';
 import { useAuth } from '../../hooks/useAuth';
+import { useWindows } from '../../hooks/useWindows';
 import Rooms from '../Rooms';
 import Windows from '../windows';
 
+import '../../utils/socket';
+
 let Home:React.FC = ()=> {
-  let { signout, user } = useAuth();
+  const { signout, user } = useAuth();
+  const {removeAll} = useWindows();
   const [showModel, setShowModel] = useState<boolean>(false);
+
+  // useEffect(()=>{
+
+  // }, []);
   // console.log(user)
   // if (user === undefined) return <div>loading...</div>
   // console.log(1)
@@ -29,7 +37,7 @@ let Home:React.FC = ()=> {
           <div className="flex items-center flex-col justify-between flex-1">
             <NavBar />
             <div className="mb-5 bg-gray-700 p-1 rounded-md flex justify-center items-center text-gray-50 cursor-pointer"
-              onClick={()=>signout()}
+              onClick={()=>{removeAll();signout()}}
             >
               退出
             </div>

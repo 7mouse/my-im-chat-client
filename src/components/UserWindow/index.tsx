@@ -14,9 +14,11 @@ const UserWindow = () => {
     //     </div>
     //   </Route>
     // </div>
-    <div className="bg-gray-50 flex flex-1 justify-center items-center">
+    <div className="bg-gray-50 flex flex-col flex-1">
       <Route exact path="/windows">
-        VChat Window
+        <div className="flex justify-center items-center flex-1">
+          VChat Window
+        </div>
       </Route>
       <Route path="/windows/:username">
         <UserChatWindow />

@@ -9,7 +9,6 @@ const Windows = () => {
   const [search, setSearch] = useState("");
   const {windows} = useWindows();
   return (
-    <BrowserRouter>
       <div className="flex flex-row w-full">
         <div className="w-64 bg-gray-100 flex flex-col">        
           <SearchBar setSearch={(str)=>setSearch(str)}/>
@@ -22,7 +21,6 @@ const Windows = () => {
         </div>
         <UserWindow />
       </div>
-    </BrowserRouter>
   )
 };
 
