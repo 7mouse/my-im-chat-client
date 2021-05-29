@@ -13,10 +13,10 @@ const Rooms = () => {
           <SearchBar setSearch={(str)=>setSearch(str)} plusAdd={true}/>
           <UserList users={user?.rooms?.filter(item=>{
             if (search.length > 0) {
-              return item.username.includes(search);
+              return item.user[0].username.includes(search);
             }
             return true;
-          })}/>
+          }).map(item=>item.user[0])}/>
         </div>
         <UserRoom />
       </div>

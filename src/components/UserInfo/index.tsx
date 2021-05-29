@@ -13,7 +13,7 @@ import Avatar from "../common/Avatar";
 const UserInfo = () => {
   const {username} = useParams<{username: string}>();
   const {user} = useAuth();
-  const u = user?.rooms?.filter(item=>item.username === username)[0];
+  const u = user?.rooms?.filter(item=>item.user[0].username === username)[0].user[0];
   const imgSrc = u?.avatarUrl;
   const userinfo = u?.userinfo;
   const {addWindow} = useWindows();

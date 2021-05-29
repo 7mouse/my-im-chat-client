@@ -5,9 +5,12 @@ export type User = {
   avatarUrl?: string,
   userinfo?: string,
   rooms?: Array<{  
-    username: string,
-    avatarUrl?: string,
-    userinfo?: string,
+    room: Object,
+    user: [{
+      username: string,
+      avatarUrl?: string,
+      userinfo?: string,        
+    }]
   }>
 }
 
