@@ -12,8 +12,8 @@ import Windows from '../windows';
 import '../../utils/socket';
 
 let Home:React.FC = ()=> {
-  const { signout, user } = useAuth();
-  const {removeAll} = useWindows();
+  const { signout, user, updateUserinfo } = useAuth();
+  const {socket, newMessage, removeAll } = useWindows();
   const [showModel, setShowModel] = useState<boolean>(false);
 
   // useEffect(()=>{
@@ -22,6 +22,24 @@ let Home:React.FC = ()=> {
   // console.log(user)
   // if (user === undefined) return <div>loading...</div>
   // console.log(1)
+  
+  useEffect(()=>{
+    socket.on("serverMsg", async (data)=>{
+      if (
+        (data.receiver === user?.username)
+      ) {
+        console.log("newMessage")
+        await updateUserinfo();
+        newMessage(data.sender, data.content, data.createdTime)
+      }
+    })
+    socket.on("addUser", async (data)=>{
+      if (data.B === user?.username) {
+        await updateUserinfo();
+      }
+    })
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="w-216 h-160 rounded-md flex bg-gray-800 flex-row">

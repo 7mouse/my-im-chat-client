@@ -19,7 +19,7 @@ let App: React.FC = () => {
     <div className="App w-screen h-screen flex justify-center items-center">
       <Router>
         <Switch>
-            <Route path="/">
+            <Route exact path="/">
               <HomePage />
             </Route>
             <Route path="/login">
@@ -27,7 +27,7 @@ let App: React.FC = () => {
             </Route>
         </Switch>
         {
-          !user ? <Redirect to="/login" from="/" />
+          user === undefined ? <Redirect to="/login" from="/" />
           : <Redirect to="/" from="/" />
         }
       </Router>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { addUserRoom } from "../../../api/userFetch";
 import { useAuth } from "../../../hooks/useAuth";
 import { useError } from "../../../hooks/useError";
+import { useWindows } from "../../../hooks/useWindows";
 import { getKeyCode } from "../../../utils/tools";
 
 type props = {
@@ -10,9 +11,10 @@ type props = {
 }
 
 const SearchBar = ({setSearch, plusAdd}:props) => {
-  let {updateUserinfo} = useAuth();
+  let {updateUserinfo, user} = useAuth();
   let {setError} = useError();
   let [text, setText] = useState<string>("");
+  const {socket} = useWindows();
   return (
     <div
       onKeyDown={
@@ -37,7 +39,12 @@ const SearchBar = ({setSearch, plusAdd}:props) => {
           let res = await addUserRoom(text);
           
           if (res.message === "添加成功") {
+            
             updateUserinfo();
+            socket.emit("addUser", {
+              A: user?.username,
+              B: text
+            });
           } else {
             setError(res.message);
           }

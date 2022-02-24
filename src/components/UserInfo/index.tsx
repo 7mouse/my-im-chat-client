@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { useWindows } from "../../hooks/useWindows";
@@ -40,7 +40,8 @@ const UserInfo = () => {
           "
             onClick={
               ()=>{
-                addWindow(username, imgSrc);
+                const msgl = user?.rooms?.filter(item=>item.user[0].username === username)[0].room?.messageList;
+                addWindow(username, imgSrc, "", "", msgl);
               }
             }
         >

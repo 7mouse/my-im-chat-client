@@ -1,22 +1,34 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
+import socket from "../utils/socket";
+
 
 type WindowsProps = {
+  socket: Socket,
   windows: Array<{
     imgSrc?: string,
     userName: string,
     newMessage?: string,
-    newMessageTime?: string
+    newMessageTime?: string,
+    messageList: [{
+      content: string,
+      contentType: number
+    }] | []
   }>,
   addWindow: Function,
   removeWindow: Function,
-  removeAll: Function
+  removeAll: Function,
+  newMessage: Function
 }
 
+
 let windows = createContext<WindowsProps>({
+  socket: socket,
   windows: [],
   addWindow: ()=>{},
   removeWindow: ()=>{},
-  removeAll: ()=>{}
+  removeAll: ()=>{},
+  newMessage: ()=>{}
 });
 
 export function useWindows() {
@@ -28,12 +40,31 @@ export function WindowsProvider({children}:{children:ReactNode}) {
     imgSrc?: string,
     userName: string,
     newMessage?: string,
-    newMessageTime?: string
+    newMessageTime?: string,
+    messageList: [{
+      content: string,
+      contentType: number
+    }]
   }>>([]);
 
-  function addWindow(userName:string, imgSrc:string, newMessage:string, newMessageTime:string) {
+  function newMessage(userName:string, newMessage:string, newMessageTime:string) {
+    if (ws.findIndex(item=>item.userName === userName) !== -1) {
+      let date = new Date(newMessageTime);
+      let time = `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date.getSeconds().toString().padStart(2, "0")}`
+      let arr = ws.map(item=>{
+        if (item.userName === userName) return {...item, newMessage, newMessageTime: time};
+        else return item;
+      });
+      setWs(arr);
+    }
+  }
+
+  function addWindow(userName:string, imgSrc:string, newMessage:string, newMessageTime:string, messageList:[{
+    content: string,
+    contentType: number
+  }]) {
     if (ws.findIndex(item=>item.userName === userName) === -1) {
-      setWs((prev)=>[...prev, {imgSrc, userName, newMessage, newMessageTime}]);
+      setWs(prev=>prev.concat({imgSrc, userName, newMessage, newMessageTime, messageList}));
     }
   }
 
@@ -57,6 +88,6 @@ export function WindowsProvider({children}:{children:ReactNode}) {
     window.localStorage.setItem("windows", JSON.stringify(ws));
   }, [ws]);
   return (
-    <windows.Provider value={{windows: ws, addWindow, removeWindow, removeAll}}>{children}</windows.Provider>
+    <windows.Provider value={{socket, windows: ws, addWindow, removeWindow, removeAll, newMessage}}>{children}</windows.Provider>
   )
 }

@@ -5,7 +5,13 @@ export type User = {
   avatarUrl?: string,
   userinfo?: string,
   rooms?: Array<{  
-    room: Object,
+    room: {
+      roomType: number,
+      messageList: [{
+        content: string,
+        contentType: number
+      }] | []
+    },
     user: [{
       username: string,
       avatarUrl?: string,
@@ -53,6 +59,7 @@ function useProvideAuth() {
       }),
       referrer: "no-referrer"
     }).then(response=>response.json()).then((data)=>{
+      console.log(data)
       if (data.message && data.message === "登录成功") {
         setUser(data.data);
       } else {
